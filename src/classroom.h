@@ -1,6 +1,8 @@
 #ifndef PASSING_ATTENDANCE_SHEET_SRC_CLASSROOM_H_
 #define PASSING_ATTENDANCE_SHEET_SRC_CLASSROOM_H_
 
+#include <random>
+#include <vector>
 #include <boost/multi_array.hpp>
 
 namespace passing_attendance_sheet {
