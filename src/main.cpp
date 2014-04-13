@@ -5,24 +5,32 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc == 6)
+    if (argc != 4)
     {
-        int row = std::atoi(argv[1]);
-        int col = std::atoi(argv[2]);
-        int start_row = std::atoi(argv[3]);
-        int start_col = std::atoi(argv[4]);
-        int turns = std::atoi(argv[5]);
+        std::cerr << "Usage: " << argv[0] << " <row> <col> <repeat_times>\n";
+        std::exit(EXIT_FAILURE);
+    }
 
-        std::cout << "Classroom size: " << row << '*' << col
-                  << "\nStart point: (" << start_row << ", "
-                                        << start_col << ")\n";
-        passing_attendance_sheet::Classroom classroom(row, col);
-        for (int i = 1; i <= turns; i++)
+    int row = std::atoi(argv[1]);
+    int col = std::atoi(argv[2]);
+    int turns = std::atoi(argv[3]);
+
+    passing_attendance_sheet::Classroom classroom(row, col);
+    std::cout << "Classroom size: " << row << '*' << col << std::endl;
+
+    for (int r = 0; r < row; r++)
+    {
+        for (int c = 0; c < col; c++)
         {
-            std::cout << "turn " << i << ": " << std::flush;
-            std::cout << classroom.PassSheet(start_row, start_col)
-                      << std::endl;
+            long total_pass = 0L;
+            for (int i = 1; i <= turns; i++)
+            {
+                total_pass += classroom.PassSheet(r, c);
+            }
+            std::cout << static_cast<double>(total_pass) /
+                         static_cast<double>(turns) << " ";
         }
+        std::cout << std::endl;
     }
 
     return 0;
