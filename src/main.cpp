@@ -13,8 +13,11 @@ int main(int argc, char *argv[])
         int start_col = std::atoi(argv[4]);
         int turns = std::atoi(argv[5]);
 
+        std::cout << "Classroom size: " << row << '*' << col
+                  << "\nStart point: (" << start_row << ", "
+                                        << start_col << ")\n";
         passing_attendance_sheet::Classroom classroom(row, col);
-        for (int i = 0; i < turns; i++)
+        for (int i = 1; i <= turns; i++)
         {
             std::cout << "turn " << i << ": " << std::flush;
             std::cout << classroom.PassSheet(start_row, start_col)
