@@ -3,4 +3,5 @@
 
 *.sublime-workspace
 
-*.o
+obj/*
+bin/*
