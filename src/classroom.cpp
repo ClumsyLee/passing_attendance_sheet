@@ -24,6 +24,7 @@ int Classroom::Student::GiveSheet()
     // get the choice
     int pass_choice = possible_directions_.back();
     possible_directions_.pop_back();
+    signed_directions_.push_back(pass_choice);
 
     passed_times_[pass_choice]++;
     return pass_choice;
@@ -60,7 +61,7 @@ bool Classroom::Student::PassedFrom(int direction, int &pass_to)
         int choice = signed_directions_[pass_choice_index];
         // pass to a random direction other than 'direction'
         pass_choice = choice == direction ?
-                      signed_directions_[signed_directions_.size()] :
+                      signed_directions_[signed_directions_.size() - 1] :
                       choice;
     }
     passed_times_[pass_choice]++;
@@ -129,7 +130,7 @@ int Classroom::PassSheet(int start_row, int start_col)
         start_row += kRowOffset[pass_to];
         start_col += kColOffset[pass_to];
         // because of the order of the directions
-        int passed_from = DIRECTION_NUM - pass_to;
+        int passed_from = DIRECTION_NUM - pass_to - 1;
         // new signed student
         if (students_[start_row][start_col].PassedFrom(passed_from, pass_to))
             not_signed_number--;
