@@ -80,7 +80,7 @@ inline int Classroom::Student::passed_times(int direction) const
 
 
 Classroom::Classroom(int row, int col)
-        : is_clean(false),
+        : is_clean_(false),
           row_(row),
           col_(col),
           students_()
@@ -104,7 +104,7 @@ Classroom::Classroom(int row, int col)
     students_.resize(extents[row_][col_]);
 
     ModifySide();
-    is_clean = true;
+    is_clean_ = true;
 }
 
 int Classroom::PassSheet(int start_row, int start_col)
@@ -116,13 +116,14 @@ int Classroom::PassSheet(int start_row, int start_col)
         start_col < 0 || start_col >= col_)
         return -1;  // invalid start point
 
-    if (!is_clean)
+    if (!is_clean_)
         Clear();
 
     int pass_count = 0;
     int not_signed_number = row_ * col_ - 1;
     // pass to the first student
     int pass_to = students_[start_row][start_col].GiveSheet();
+    is_clean_ = false;  // no longer clean
     while (not_signed_number != 0)
     {
         pass_count++;
@@ -166,7 +167,7 @@ void Classroom::Clear()
             students_[row][col] = Student();
         }
     ModifySide();
-    is_clean = true;
+    is_clean_ = true;
 }
 
 }  // namespace passing_attendance_sheet

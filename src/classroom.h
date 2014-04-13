@@ -50,7 +50,7 @@ class Classroom
     void ModifySide();
     void Clear();
 
-    bool is_clean;
+    bool is_clean_;
     int row_, col_;
     boost::multi_array<Student, 2> students_;
 };  // class Classroom
