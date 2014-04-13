@@ -5,8 +5,7 @@
 
 namespace passing_attendance_sheet {
 
-std::random_device Classroom::Student::rd;
-std::mt19937 Classroom::Student::generator(rd());
+std::mt19937 Classroom::Student::generator;
 
 Classroom::Student::Student(const std::vector<int> &neighbors)
         : has_signed_(false),
@@ -85,6 +84,10 @@ Classroom::Classroom(int row, int col)
           col_(col),
           students_()
 {
+    // seed the generator
+    static std::random_device rd;
+    Student::Seed(rd());
+
     if (row_ < 2)  // row too small
     {
         std::cerr << "row (" << row_ << ") too small! changed it to 2\n";

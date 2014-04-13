@@ -24,15 +24,18 @@ class Classroom
      public:
         explicit Student(const std::vector<int> &neighbors = {0, 1, 2, 3});
 
+        // seed the generator
+        static void Seed(int seed) { generator.seed(seed); }
+
         int GiveSheet();
         // if new signed, return true
         bool PassedFrom(int direction, int &pass_to);
+
         bool has_signed() const { return has_signed_; }
         int passed_times(int direction) const;
 
      private:
         // random generator
-        static std::random_device rd;
         static std::mt19937 generator;
 
         bool has_signed_;
