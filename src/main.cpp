@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <random>
 #include "classroom.h"
 
 int main(int argc, char *argv[])
@@ -15,8 +16,8 @@ int main(int argc, char *argv[])
         passing_attendance_sheet::Classroom classroom(row, col);
         for (int i = 0; i < turns; i++)
         {
-            std::cout << "turn " << i << ": "
-                      << classroom.PassSheet(start_row, start_col)
+            std::cout << "turn " << i << ": " << std::flush;
+            std::cout << classroom.PassSheet(start_row, start_col)
                       << std::endl;
         }
     }
