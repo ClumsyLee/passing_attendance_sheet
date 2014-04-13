@@ -47,9 +47,6 @@ class Classroom
     void ModifySide();
     void Clear();
 
-    static constexpr int kRowOffset[DIRECTION_NUM] = {-1, 0, 0, 1};
-    static constexpr int kColOffset[DIRECTION_NUM] = {0, -1, 1, 0};
-
     bool is_clean;
     int row_, col_;
     boost::multi_array<Student, 2> students_;

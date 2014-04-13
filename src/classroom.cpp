@@ -105,6 +105,9 @@ Classroom::Classroom(int row, int col)
 
 int Classroom::PassSheet(int row, int col)
 {
+    static const int kRowOffset[DIRECTION_NUM] = {-1, 0, 0, 1};
+    static const int kColOffset[DIRECTION_NUM] = {0, -1, 1, 0};
+
     if (row < 0 || row >= row_ ||
         col < 0 || col >= col_)
         return -1;  // invalid start point
