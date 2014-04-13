@@ -13,7 +13,6 @@ class Classroom
     enum { DIRECTION_NUM = 4 };
 
     Classroom(int row, int col);
-    ~Classroom();
 
     int PassSheet(int row, int col);
 
