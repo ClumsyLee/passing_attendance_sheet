@@ -29,12 +29,20 @@ class Classroom
 
         int GiveSheet();
         // if new signed, return true
-        bool PassedFrom(int direction, int &pass_to);
+        bool PassedFrom(int direction, int &pass_to, int &status);
 
         bool has_signed() const { return has_signed_; }
         int passed_times(int direction) const;
 
      private:
+        // make sure the first student will say 0
+        enum { I_HAD_OTHER_CHOICES_BUT_I_PICKED_YOU,
+               // "have you signed?"
+               YOU_ARE_MY_ONLY_CHOICE_SO_DO_NOT_GIVE_IT_BACK_TO_ME,
+               // "we have all signed over here"
+               I_HAVE_SIGNED_AND_YOU_HAVE_OTHER_CHOICES_SO_TAKE_IT_BACK };
+               // "yes, I have signed"
+
         // random generator
         static std::mt19937 generator;
 

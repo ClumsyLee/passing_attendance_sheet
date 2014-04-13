@@ -31,38 +31,64 @@ int Classroom::Student::GiveSheet()
 }
 
 
-bool Classroom::Student::PassedFrom(int direction, int &pass_to)
+bool Classroom::Student::PassedFrom(int direction, int &pass_to, int &status)
 {
     bool new_signed = false;
-    if (!has_signed_)
+    if (has_signed_)
+    {
+        if (status == I_HAD_OTHER_CHOICES_BUT_I_PICKED_YOU)
+        {
+            status = I_HAVE_SIGNED_AND_YOU_HAVE_OTHER_CHOICES_SO_TAKE_IT_BACK;
+            pass_to = direction;  // pass back
+            passed_times_[direction]++;
+            return false;
+        }
+    }
+    else  // I haven't signed yet, so I'll take it
     {
         new_signed = true;
-        has_signed_ = true;  // sign himself
+        has_signed_ = true;  // signing...Done.
     }
 
     auto position = std::find(possible_directions_.begin(),
                               possible_directions_.end(), direction);
-    if (position != possible_directions_.end())  // a possible direction before
+    if (position != possible_directions_.end())  // I thought you didn't sign
     {
-        possible_directions_.erase(position);
+        possible_directions_.erase(position);  // well, now I know you did
         signed_directions_.push_back(direction);
     }
 
+    // Now it's time to choose who to pass this sheet...
     int pass_choice;
-    if (possible_directions_.size() > 0)  // still has possible directions
+    if (possible_directions_.size() >= 1)  // I have one or several choices...
     {
-        pass_choice = possible_directions_.back();
-        possible_directions_.pop_back();
+        pass_choice = possible_directions_.back();  // picked up a person
+        possible_directions_.pop_back();            // randomly, here you go
         signed_directions_.push_back(pass_choice);
+
+        status = possible_directions_.size() ?
+                 I_HAD_OTHER_CHOICES_BUT_I_PICKED_YOU :
+                 YOU_ARE_MY_ONLY_CHOICE_SO_DO_NOT_GIVE_IT_BACK_TO_ME;
     }
-    else  // no possible directions
+    else  // well, I'm sure everyone around me has signed
     {
-        int pass_choice_index = generator() % (signed_directions_.size() - 1);
-        int choice = signed_directions_[pass_choice_index];
-        // pass to a random direction other than 'direction'
-        pass_choice = choice == direction ?
-                      signed_directions_[signed_directions_.size() - 1] :
-                      choice;
+        // well, I've signed, give it back to you
+        if (status == I_HAD_OTHER_CHOICES_BUT_I_PICKED_YOU)
+        {
+            status = YOU_ARE_MY_ONLY_CHOICE_SO_DO_NOT_GIVE_IT_BACK_TO_ME;
+            pass_choice = direction;
+        }
+        else  // "YOU_ARE_MY_ONLY_CHOICE_SO_DO_NOT_GIVE_IT_BACK_TO_ME"
+        {
+            // roll a dice, roll a dice!!!
+            int pass_choice_index = generator() %
+                                    (signed_directions_.size() - 1);
+            int choice = signed_directions_[pass_choice_index];
+            // pass to random one other than the one who give me the sheet
+            pass_choice = choice == direction ?
+                          signed_directions_[signed_directions_.size() - 1] :
+                          choice;
+        }
     }
     passed_times_[pass_choice]++;
 
@@ -121,9 +147,12 @@ int Classroom::PassSheet(int start_row, int start_col)
 
     int pass_count = 0;
     int not_signed_number = row_ * col_ - 1;
+
     // pass to the first student
     int pass_to = students_[start_row][start_col].GiveSheet();
     is_clean_ = false;  // no longer clean
+    int status = 0;  // the fisrt student has at least two choice
+
     while (not_signed_number != 0)
     {
         pass_count++;
@@ -133,7 +162,8 @@ int Classroom::PassSheet(int start_row, int start_col)
         // because of the order of the directions
         int passed_from = DIRECTION_NUM - pass_to - 1;
         // new signed student
-        if (students_[start_row][start_col].PassedFrom(passed_from, pass_to))
+        if (students_[start_row][start_col].PassedFrom(passed_from, pass_to,
+                                                       status))
             not_signed_number--;
     }
     return pass_count;
