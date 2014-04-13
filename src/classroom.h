@@ -16,7 +16,7 @@ class Classroom
 
     Classroom(int row, int col);
 
-    int PassSheet(int row, int col);
+    int PassSheet(int start_row, int start_col);
 
  private:
     class Student

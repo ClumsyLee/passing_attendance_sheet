@@ -106,31 +106,32 @@ Classroom::Classroom(int row, int col)
     is_clean = true;
 }
 
-int Classroom::PassSheet(int row, int col)
+int Classroom::PassSheet(int start_row, int start_col)
 {
     static const int kRowOffset[DIRECTION_NUM] = {-1, 0, 0, 1};
     static const int kColOffset[DIRECTION_NUM] = {0, -1, 1, 0};
 
-    if (row < 0 || row >= row_ ||
-        col < 0 || col >= col_)
+    if (start_row < 0 || start_row >= row_ ||
+        start_col < 0 || start_col >= col_)
         return -1;  // invalid start point
 
     if (!is_clean)
         Clear();
 
     int pass_count = 0;
-    int not_signed_number = row * col - 1;
+    int not_signed_number = row_ * col_ - 1;
     // pass to the first student
-    int pass_to = students_[row][col].GiveSheet();
+    int pass_to = students_[start_row][start_col].GiveSheet();
     while (not_signed_number != 0)
     {
         pass_count++;
         // generate new row and col
-        row += kRowOffset[pass_to];
-        col += kColOffset[pass_to];
+        start_row += kRowOffset[pass_to];
+        start_col += kColOffset[pass_to];
         // because of the order of the directions
         int passed_from = DIRECTION_NUM - pass_to;
-        if (students_[row][col].PassedFrom(passed_from, pass_to))  // new signed
+        // new signed student
+        if (students_[start_row][start_col].PassedFrom(passed_from, pass_to))
             not_signed_number--;
     }
     return pass_count;
